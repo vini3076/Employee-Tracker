@@ -31,6 +31,7 @@ db.connect(err => {
     }
 });
 
+//the start of the application
 function init() {
     inquirer.prompt   ([ {
         type: 'list',
@@ -80,6 +81,7 @@ function init() {
 
 init();
 
+//function to view all employees
 function viewAllEmployees (){
    db.promise().query("select employee.id, employee.first_name, employee.last_name, roles.title, department.name as department, roles.salary, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join roles on employee.role_id = roles.id left join department on roles.department_id = department.id left join employee manager on manager.id = employee.manager_id").then(([results]) => {
         console.log("");
@@ -89,6 +91,7 @@ function viewAllEmployees (){
       })
 }
 
+//function to add employee
 const addEmployee = async () => {
 
      const [roles] = await db.promise().query('SELECT * FROM roles')
@@ -131,6 +134,7 @@ const addEmployee = async () => {
       setTimeout(init, 500)
   };
 
+//function to view all departments
 function viewAllDepartments (){
     db.promise().query('SELECT * FROM department').then(([results]) => {
         console.log("");
@@ -140,6 +144,7 @@ function viewAllDepartments (){
       })
 }
 
+//function to add department
 const addDepartment = async () => {
     const department = await inquirer.prompt([
      {
@@ -156,6 +161,7 @@ const addDepartment = async () => {
          setTimeout(init, 500)
  }
 
+ //function to view all roles
 function viewAllRoles (){
 
     db.promise().query('select roles.id, roles.title, roles.salary, department.name as department from roles left join department on roles.department_id = department.id').then(([results]) => {
@@ -166,6 +172,7 @@ function viewAllRoles (){
 });
 }
 
+//function to add role
 const addRole = async () => {
     const [departments] = await db.promise().query('SELECT * FROM department')
      const departmentList = departments.map(department => ({name: department.name, value: department.id}));
@@ -197,6 +204,7 @@ const addRole = async () => {
          setTimeout(init, 500)
  }
 
+ //function to update employee
  const updateEmployeeRole = async () => {
 
     const [roles] = await db.promise().query('SELECT * FROM roles')
