@@ -60,7 +60,6 @@ function init() {
            addDepartment();        
            break;
 
-
            case "View All Roles":
            viewAllRoles();        
            break;
@@ -69,8 +68,8 @@ function init() {
            addRole();        
            break;
 
-           default:
-           console.log('goodbye');
+           case "Exit":
+           console.log('Goodbye');
            process.exit();
 
         }
@@ -82,7 +81,7 @@ function init() {
 init();
 
 function viewAllEmployees (){
-    db.promise().query('SELECT * FROM employee').then(([results]) => {
+   db.promise().query('SELECT * FROM employee').then(([results]) => {
         console.table(results);
         setTimeout(init, 500)
       })
@@ -199,16 +198,16 @@ const addRole = async () => {
 
    employeeList.push({name:'None', value: null});
     
-    inquirer.prompt([
+    await inquirer.prompt([
      {
-         type: 'input',
+         type: 'list',
          name: 'employee',
          message: `Which employee's role will you like to update?`,
          choices: employeeList
      },
      {
-        type: 'input',
-        name: 'role',
+        type: 'list',
+        name: 'newRole',
         message: "What is this employee's new role?",
         choices: roleList
     },
@@ -216,13 +215,11 @@ const addRole = async () => {
      ]).then((answers) => {
         let role = answers.newRole;
         let employee_id = answers.employee;
-        db.query(`UPDATE employees SET role_id = ${role} WHERE id = ${employee_id};`)
+        db.promise().query(`UPDATE employee SET role_id = ${role} WHERE id = ${employee_id};`);
+        console.log('employee updated in database');
      }
 
      )
-     await db.promise().query('insert into employee set ?', employee)
-
-     console.log('employee updated in database');
      setTimeout(init, 500)
  };
    
