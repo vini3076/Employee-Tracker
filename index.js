@@ -81,8 +81,10 @@ function init() {
 init();
 
 function viewAllEmployees (){
-   db.promise().query('SELECT * FROM employee').then(([results]) => {
+   db.promise().query("select employee.id, employee.first_name, employee.last_name, roles.title, department.name as department, roles.salary, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join roles on employee.role_id = roles.id left join department on roles.department_id = department.id left join employee manager on manager.id = employee.manager_id").then(([results]) => {
+        console.log("");
         console.table(results);
+        console.log("");
         setTimeout(init, 500)
       })
 }
@@ -123,14 +125,17 @@ const addEmployee = async () => {
   
       ])
       await db.promise().query('insert into employee set ?', employee)
- 
-      console.log('employee added to database');
+      console.log("");
+      console.log('Employee added to database');
+      console.log("");
       setTimeout(init, 500)
   };
 
 function viewAllDepartments (){
     db.promise().query('SELECT * FROM department').then(([results]) => {
+        console.log("");
         console.table(results);
+        console.log("");
         setTimeout(init, 500);
       })
 }
@@ -145,15 +150,18 @@ const addDepartment = async () => {
  
      ])
          await db.promise().query('insert into department set ?', department)
- 
-         console.log('department added to database');
+         console.log("");
+         console.log('Department added to database');
+         console.log("");
          setTimeout(init, 500)
  }
 
 function viewAllRoles (){
 
     db.promise().query('select roles.id, roles.title, roles.salary, department.name as department from roles left join department on roles.department_id = department.id').then(([results]) => {
+        console.log("");
    console.table(results);
+   console.log("");
    setTimeout(init, 500)
 });
 }
@@ -183,8 +191,9 @@ const addRole = async () => {
  
      ])
          await db.promise().query('insert into roles set ?', role)
- 
-         console.log('role added to database');
+         console.log("");
+         console.log('Role added to database');
+         console.log("");
          setTimeout(init, 500)
  }
 
@@ -195,8 +204,6 @@ const addRole = async () => {
 
     const [employees] = await db.promise().query('SELECT * FROM employee')
    const employeeList = employees.map(employee => ({name: `${employee.first_name} ${employee.last_name}`, value: employee.id}));
-
-   employeeList.push({name:'None', value: null});
     
     await inquirer.prompt([
      {
@@ -216,7 +223,9 @@ const addRole = async () => {
         let role = answers.newRole;
         let employee_id = answers.employee;
         db.promise().query(`UPDATE employee SET role_id = ${role} WHERE id = ${employee_id};`);
-        console.log('employee updated in database');
+        console.log("");
+        console.log('Employee updated in database');
+        console.log("");
      }
 
      )
